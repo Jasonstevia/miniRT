@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../miniRT.h"
 
 t_sphere	parse_sphere(char *line)
 {
@@ -27,8 +27,11 @@ t_sphere	parse_sphere(char *line)
 		free_split(split_part);
 		error_exit("invalid format: 'sp x,y,z diameter R,G,B'");
 	}
-	if (ft_atof(split_part[2]) <= 0)
+	if (!is_valid_number(split_part[2]) || ft_atof(split_part[2]) <= 0)
+	{
+		free_split(split_part);
 		error_exit("diameter must be a positive value");
+	}
 	sphere.center = parse_vec3(split_part[1]);
 	sphere.diameter = ft_atof(split_part[2]);
 	sphere.colors = parse_color(split_part[3]);
@@ -51,9 +54,9 @@ t_plane	parse_plane(char *line)
 		free_split(split_part);
 		error_exit("invalid format: 'pl x,y,z normal R,G,B'");
 	}
-	plane.coordinates_palne = parse_vec3(split_part[1]);
+	plane.coordinates_plane = parse_vec3(split_part[1]);
 	plane.normal = parse_normal(split_part[2]);
-	plane.color = parse_color(split_part[3]);
+	plane.colors = parse_color(split_part[3]);
 	free_split(split_part);
 	return (plane);
 }
@@ -73,8 +76,12 @@ t_cylinder	parse_cylinder(char *line)
 		free_split(split_part);
 		error_exit("invalid format: 'cy x,y,z axis diameter height R,G,B'");
 	}
-	if (ft_atof(split_part[3]) <= 0 || ft_atof(split_part[4]) <= 0)
+	if (!is_valid_number(split_part[3]) || !is_valid_number(split_part[4])
+		|| ft_atof(split_part[3]) <= 0 || ft_atof(split_part[4]) <= 0)
+	{
+		free_split(split_part);
 		error_exit("diameter and height must be positive values");
+	}
 	cylinder.center_cy = parse_vec3(split_part[1]);
 	cylinder.vector = parse_normal(split_part[2]);
 	cylinder.diameter = ft_atof(split_part[3]);

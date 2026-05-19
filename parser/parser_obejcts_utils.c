@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../miniRT.h"
 
 t_sphere	*grow_spheres(t_sphere *old, int count)
 {

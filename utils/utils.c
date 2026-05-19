@@ -10,18 +10,69 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../miniRT.h"
+
+static t_scene	*g_error_scene;
+static char		*g_error_line;
+
+void	set_error_scene(t_scene *scene)
+{
+	g_error_scene = scene;
+}
+
+void	set_error_line(char *line)
+{
+	g_error_line = line;
+}
 
 void	error_exit(char *str)
 {
 	printf("Error\n");
 	printf("%s\n", str);
+	if (g_error_line)
+	{
+		free(g_error_line);
+		g_error_line = NULL;
+	}
+	get_next_line(-42);
+	if (g_error_scene)
+		free_scene(g_error_scene);
 	exit (1);
 }
 
 int	is_space(char c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
+}
+
+int	is_valid_number(char *str)
+{
+	int	i;
+	int	digits;
+
+	i = 0;
+	digits = 0;
+	while (is_space(str[i]))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		digits++;
+		i++;
+	}
+	if (str[i] == '.')
+	{
+		i++;
+		while (str[i] >= '0' && str[i] <= '9')
+		{
+			digits++;
+			i++;
+		}
+	}
+	while (is_space(str[i]))
+		i++;
+	return (digits > 0 && str[i] == '\0');
 }
 
 double	helper_ft_atof(int i, char	*str)

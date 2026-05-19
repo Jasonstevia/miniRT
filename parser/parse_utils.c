@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../miniRT.h"
 
 t_vec3	parse_vec3(char *line)
 {
@@ -27,6 +27,16 @@ t_vec3	parse_vec3(char *line)
 		free_split(split_part);
 		error_exit("the argument must be 3 'x, y, z'");
 	}
+	i = 0;
+	while (split_part[i] != NULL)
+	{
+		if (!is_valid_number(split_part[i]))
+		{
+			free_split(split_part);
+			error_exit("invalid numeric value");
+		}
+		i++;
+	}
 	vec3.x = ft_atof(split_part[0]);
 	vec3.y = ft_atof(split_part[1]);
 	vec3.z = ft_atof(split_part[2]);
@@ -41,7 +51,8 @@ int	checking_colors(char **split_part)
 	i = 0;
 	while (split_part[i] != NULL)
 	{
-		if (ft_atof(split_part[i]) < 0 || ft_atof(split_part[i]) > 255)
+		if (!is_valid_number(split_part[i])
+			|| ft_atof(split_part[i]) < 0 || ft_atof(split_part[i]) > 255)
 			return (1);
 		i++;
 	}
@@ -64,7 +75,10 @@ t_vec3	parse_color(char *line)
 		error_exit("the argument must be 3 'R, G, B'");
 	}
 	if (checking_colors(split_part))
+	{
+		free_split(split_part);
 		error_exit("the range of colors is [0->255]");
+	}
 	colors.x = ft_atof(split_part[0]);
 	colors.y = ft_atof(split_part[1]);
 	colors.z = ft_atof(split_part[2]);
@@ -79,7 +93,8 @@ int	checking_out_of_range(char **split_part)
 	i = 0;
 	while (split_part[i] != NULL)
 	{
-		if (ft_atof(split_part[i]) < -1 || ft_atof(split_part[i]) > 1)
+		if (!is_valid_number(split_part[i])
+			|| ft_atof(split_part[i]) < -1 || ft_atof(split_part[i]) > 1)
 			return (1);
 		i++;
 	}
@@ -102,10 +117,18 @@ t_vec3	parse_normal(char *line)
 		error_exit("the argument must be 3 'x, y, z'");
 	}
 	if (checking_out_of_range(split_part))
+	{
+		free_split(split_part);
 		error_exit("the range of normal is [0.0,1.0]");
+	}
 	vec3.x = ft_atof(split_part[0]);
 	vec3.y = ft_atof(split_part[1]);
 	vec3.z = ft_atof(split_part[2]);
+	if (vec3.x == 0 && vec3.y == 0 && vec3.z == 0)
+	{
+		free_split(split_part);
+		error_exit("normal vector cannot be zero");
+	}
 	free_split(split_part);
 	return (vec3);
 }

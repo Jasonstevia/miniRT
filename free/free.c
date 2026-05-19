@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../miniRT.h"
 
 void	free_split(char **split_part)
 {

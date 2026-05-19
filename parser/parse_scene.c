@@ -10,26 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../miniRT.h"
 
 void	parser_scene(t_scene *scene, char *filename)
 {
 	int		fd;
 	char	*line;
 
+	set_error_scene(scene);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		error_exit("Cannot open this file");
 	line = get_next_line(fd);
 	while (line)
 	{
+		set_error_line(line);
 		if (!is_empty_line_comments(line))
 			route_line(scene, line);
 		free(line);
+		set_error_line(NULL);
 		line = get_next_line(fd);
 	}
 	check_required_elements(scene);
 	close (fd);
+	set_error_scene(NULL);
 }
 
 int	is_empty_line_comments(char	*line)
@@ -69,12 +73,20 @@ void	route_line(t_scene *scene, char *line)
 	if (ft_strncmp(first_word, "A", 1) == 0
 		|| ft_strncmp(first_word, "C", 1) == 0
 		|| ft_strncmp(first_word, "L", 1) == 0)
+	{
+		free(first_word);
 		parse_elements(scene, line);
+	}
 	else if (ft_strncmp(first_word, "sp", 2) == 0
 		|| ft_strncmp(first_word, "pl", 2) == 0
 		|| ft_strncmp(first_word, "cy", 2) == 0)
+	{
+		free(first_word);
 		parse_objects(scene, line);
+	}
 	else
+	{
+		free(first_word);
 		error_exit(" This ar not match to requirement of rt file");
-	free(first_word);
+	}
 }

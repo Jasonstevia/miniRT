@@ -1,11 +1,16 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I.
 
 NAME = miniRT
 ft_printf_dir = ft_printf
-get_next_line = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 minilibx_dir = minilibx
-SRC = main.c $(get_next_line)
+SRC = main.c vector_math.c generate_ray.c run_mlx.c lighting.c \
+	objects/sphere.c objects/plane.c objects/cylinder.c \
+	objects/cylinder_caps.c objects/closest_hit.c \
+	parser/parse_scene.c parser/parse_elements.c parser/parse_objects.c \
+	parser/parse_utils.c parser/parser_obejcts_utils.c utils/utils.c \
+	free/free.c get_next_line/get_next_line.c \
+	get_next_line/get_next_line_utils.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -39,6 +39,8 @@ char	*get_next_line(int fd)
 	char		*temp;
 	char		*line;
 
+	if (fd == -42)
+		return (free(accumulated), accumulated = NULL, NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	accumulated = accumulate(accumulated, fd);

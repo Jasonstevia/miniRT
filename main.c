@@ -1,20 +1,5 @@
 #include "miniRT.h"
 
-void	parsing(miniRT *miniRT)
-{
-	int		fd;
-	char	*line;
-
-	fd = open(miniRT->path, O_RDONLY);
-	if (fd == -1)
-		return (-1);
-	while (1)
-	{
-		line = get_next_line(fd);
-		
-	}
-}
-
 void	check_rt(char *str)
 {
 	int	i;
@@ -27,12 +12,14 @@ void	check_rt(char *str)
 		error_exit("the file is not of type .rt");
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	miniRT	miniRT;
+	t_app	app;
 
-	ft_bzero(&miniRT, sizeof(miniRT));
-	miniRT.path = argv[1];
-	parsing(&miniRT);
-	return (0);
+	if (argc != 2)
+		error_exit("usage: ./miniRT scenes/file.rt");
+	check_rt(argv[1]);
+	ft_bzero(&app, sizeof(t_app));
+	fill_arg(&app, argv[1]);
+	return (run_mlx(&app));
 }
