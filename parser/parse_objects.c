@@ -27,7 +27,7 @@ t_sphere	parse_sphere(char *line)
 		free_split(split_part);
 		error_exit("invalid format: 'sp x,y,z diameter R,G,B'");
 	}
-	if (!is_valid_number(split_part[2]) || ft_atof(split_part[2]) <= 0)
+	if (ft_atof(split_part[2]) <= 0)
 	{
 		free_split(split_part);
 		error_exit("diameter must be a positive value");
@@ -68,20 +68,18 @@ t_cylinder	parse_cylinder(char *line)
 	int			i;
 
 	i = 0;
+	ft_bzero(&cylinder, sizeof(t_cylinder));
 	split_part = ft_split(line, ' ');
 	while (split_part[i] != NULL)
 		i++;
 	if (i != 6)
-	{
-		free_split(split_part);
-		error_exit("invalid format: 'cy x,y,z axis diameter height R,G,B'");
-	}
-	if (!is_valid_number(split_part[3]) || !is_valid_number(split_part[4])
-		|| ft_atof(split_part[3]) <= 0 || ft_atof(split_part[4]) <= 0)
-	{
-		free_split(split_part);
-		error_exit("diameter and height must be positive values");
-	}
+		return (free_split(split_part),
+			error_exit("invalid format: 'cy x,y,z axis diameter height R,G,B'"),
+			cylinder);
+	if (ft_atof(split_part[3]) <= 0 || ft_atof(split_part[4]) <= 0)
+		return (free_split(split_part),
+			error_exit("diameter and height must be positive values"),
+			cylinder);
 	cylinder.center_cy = parse_vec3(split_part[1]);
 	cylinder.vector = parse_normal(split_part[2]);
 	cylinder.diameter = ft_atof(split_part[3]);
@@ -89,27 +87,4 @@ t_cylinder	parse_cylinder(char *line)
 	cylinder.color = parse_color(split_part[5]);
 	free_split(split_part);
 	return (cylinder);
-}
-
-void	parse_objects(t_scene *scene, char *line)
-{
-	if (ft_strncmp(line, "sp", 2) == 0)
-	{
-		scene->sphere = grow_spheres(scene->sphere, scene->sphere_count);
-		scene->sphere[scene->sphere_count] = parse_sphere(line);
-		scene->sphere_count++;
-	}
-	else if (ft_strncmp(line, "pl", 2) == 0)
-	{
-		scene->plane = grow_planes(scene->plane, scene->plane_count);
-		scene->plane[scene->plane_count] = parse_plane(line);
-		scene->plane_count++;
-	}
-	else
-	{
-		scene->cylinder = grow_cylinders(scene->cylinder,
-				scene->cylinder_count);
-		scene->cylinder[scene->cylinder_count] = parse_cylinder(line);
-		scene->cylinder_count++;
-	}
 }

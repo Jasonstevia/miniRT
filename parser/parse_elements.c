@@ -46,8 +46,7 @@ t_ambient	parse_ambient(char	*line)
 		i++;
 	if (i != 3)
 		error_exit("invalid ambinet format");
-	if (!is_valid_number(split[1])
-		|| ft_atof(split[1]) < 0 || ft_atof(split[1]) > 1)
+	if (ft_atof(split[1]) < 0 || ft_atof(split[1]) > 1)
 	{
 		free_split(split);
 		error_exit("the ratio must be between [0.0,1.0]");
@@ -75,8 +74,7 @@ t_camera	parse_camera(char	*line)
 		error_exit("invalid camera format");
 	position = parse_vec3(split[1]);
 	orinetation = parse_normal(split[2]);
-	if (!is_valid_number(split[3])
-		|| ft_atof(split[3]) < 0 || ft_atof(split[3]) > 180)
+	if (ft_atof(split[3]) < 0 || ft_atof(split[3]) > 180)
 	{
 		free_split(split);
 		error_exit("the range of horizontal is [0,180]");
@@ -103,8 +101,7 @@ t_light	parse_light(char *line)
 		free_split(split_part);
 		error_exit("the argument must be 4 'L x,y,z brightness R,G,B'");
 	}
-	if (!is_valid_number(split_part[2])
-		|| ft_atof(split_part[2]) < 0 || ft_atof(split_part[2]) > 1)
+	if (ft_atof(split_part[2]) < 0 || ft_atof(split_part[2]) > 1)
 	{
 		free_split(split_part);
 		error_exit("the range of brightness is [0.0,1.0]");

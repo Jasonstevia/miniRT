@@ -17,23 +17,19 @@ void	parser_scene(t_scene *scene, char *filename)
 	int		fd;
 	char	*line;
 
-	set_error_scene(scene);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		error_exit("Cannot open this file");
 	line = get_next_line(fd);
 	while (line)
 	{
-		set_error_line(line);
 		if (!is_empty_line_comments(line))
 			route_line(scene, line);
 		free(line);
-		set_error_line(NULL);
 		line = get_next_line(fd);
 	}
 	check_required_elements(scene);
 	close (fd);
-	set_error_scene(NULL);
 }
 
 int	is_empty_line_comments(char	*line)
@@ -54,22 +50,8 @@ void	fill_arg(t_app *app, char *arg)
 	parser_scene(&app->scene, arg);
 }
 
-void	route_line(t_scene *scene, char *line)
+static void	handle_word(t_scene *scene, char *line, char *first_word)
 {
-	int		i;
-	int		j;
-	int		lenght;
-	char	*first_word;
-
-	i = 0;
-	j = 0;
-	while (is_space(line[i]))
-		i++;
-	j = i;
-	while (line[j] != '\0' && !is_space(line[j]))
-		j++;
-	lenght = j - i;
-	first_word = ft_substr(line, i, lenght);
 	if (ft_strncmp(first_word, "A", 1) == 0
 		|| ft_strncmp(first_word, "C", 1) == 0
 		|| ft_strncmp(first_word, "L", 1) == 0)
@@ -89,4 +71,20 @@ void	route_line(t_scene *scene, char *line)
 		free(first_word);
 		error_exit(" This ar not match to requirement of rt file");
 	}
+}
+
+void	route_line(t_scene *scene, char *line)
+{
+	int		i;
+	int		j;
+	char	*first_word;
+
+	i = 0;
+	while (is_space(line[i]))
+		i++;
+	j = i;
+	while (line[j] != '\0' && !is_space(line[j]))
+		j++;
+	first_word = ft_substr(line, i, j - i);
+	handle_word(scene, line, first_word);
 }

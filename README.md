@@ -99,4 +99,4 @@ Camera movement is a development/debug helper and is not required by the mandato
 - Finite cylinder intersection math
 - `math.h` documentation
 
-AI assistance was used as a learning and review aid for the execution side of the project: explaining ray tracing math, reviewing integration issues, helping debug build errors, and suggesting tests. The final code remains reviewed and owned by the project authors.
+AI assistance was used as a learning and review aid for the execution side of the project: explaining ray tracing math, reviewing integration issues, helping debug build errors, and suggesting tests. The final code was developed by the project authors.

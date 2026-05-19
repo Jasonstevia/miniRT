@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   generate_ray.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jslim <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 13:35:00 by jslim             #+#    #+#             */
+/*   Updated: 2026/05/19 13:35:02 by jslim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniRT.h"
 
-static int rgb_to_int(t_vec3 color)
+static int	rgb_to_int(t_vec3 color)
 {
 	return ((int) color.x << 16 | (int) color.y << 8 | (int) color.z);
 }
@@ -19,21 +31,17 @@ static t_ray	generate_ray(t_camera camera, double x, double y)
 {
 	double	u;
 	double	v;
-	double	screen_x;
-	double	screen_y;
 	double	aspect;
 	double	scale;
 	t_ray	ray;
 
 	u = (x + 0.5) / WIDTH;
 	v = (y + 0.5) / HEIGHT;
-	screen_x = 2 * u - 1;
-	screen_y = 1 - 2 * v;
 	aspect = (double)WIDTH / HEIGHT;
 	scale = tan((camera.fov * PI / 180) / 2);
-	screen_x = screen_x * scale;
-	screen_y = screen_y * scale / aspect;
-	ray.direction = vec3(screen_x, screen_y, 1);
+	ray.direction.x = (2 * u - 1) * scale;
+	ray.direction.y = (1 - 2 * v) * scale / aspect;
+	ray.direction.z = 1;
 	ray.origin = camera.position;
 	return (ray);
 }
@@ -45,7 +53,6 @@ static t_ray	correct_orientation(t_camera camera, double x, double y)
 	t_vec3	up;
 	t_vec3	right;
 	t_ray	ray;
-	t_vec3	xy;
 
 	ray = generate_ray(camera, x, y);
 	forward = vec_norm(camera.orientation);
@@ -54,8 +61,9 @@ static t_ray	correct_orientation(t_camera camera, double x, double y)
 		world_up = vec3(0, 0, 1);
 	right = vec_norm(vec_cross(world_up, forward));
 	up = vec_cross(forward, right);
-	xy = vec_add(vec_mul(right, ray.direction.x), vec_mul(up, ray.direction.y));
-	ray.direction = vec_norm(vec_add(xy, forward));
+	ray.direction = vec_add(vec_mul(right, ray.direction.x),
+			vec_mul(up, ray.direction.y));
+	ray.direction = vec_norm(vec_add(ray.direction, forward));
 	ray.origin = camera.position;
 	return (ray);
 }

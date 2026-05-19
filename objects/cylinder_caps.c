@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder_caps.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jslim <jslim@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 14:30:00 by jslim             #+#    #+#             */
+/*   Updated: 2026/05/19 14:30:00 by jslim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniRT.h"
 
-static t_hit	valid_cylinder_hit(t_cylinder cylinder, t_vec3 cap_center,
+static t_hit	valid_cap_hit(t_cylinder cylinder, t_vec3 cap_center,
 		t_vec3 cap_normal, t_ray ray)
 {
 	t_vec3	axis;
@@ -14,7 +26,8 @@ static t_hit	valid_cylinder_hit(t_cylinder cylinder, t_vec3 cap_center,
 	r = vec_dot(ray.direction, axis);
 	if (fabs(r) < EPSILON)
 		return (hit);
-	hit.t = vec_dot(vec_sub(cap_center, ray.origin), axis) / vec_dot(ray.direction, axis);
+	hit.t = vec_dot(vec_sub(cap_center, ray.origin), axis)
+		/ vec_dot(ray.direction, axis);
 	if (hit.t < EPSILON)
 		return (hit);
 	hit.point = vec_add(ray.origin, vec_mul(ray.direction, hit.t));
@@ -27,7 +40,6 @@ static t_hit	valid_cylinder_hit(t_cylinder cylinder, t_vec3 cap_center,
 	return (hit);
 }
 
-
 static t_hit	intersect_cylinder_caps(t_cylinder cylinder, t_ray ray)
 {
 	t_vec3	cap_top;
@@ -35,20 +47,21 @@ static t_hit	intersect_cylinder_caps(t_cylinder cylinder, t_ray ray)
 	t_vec3	axis;
 	t_hit	hit_top;
 	t_hit	hit_bottom;
-	t_hit	closest;
 
-	closest.hit = 0;
-	closest.t = INF;
 	axis = vec_norm(cylinder.vector);
-	cap_top = vec_add(cylinder.center_cy, vec_mul(axis, cylinder.height / 2));
-	cap_bottom = vec_sub(cylinder.center_cy, vec_mul(axis, cylinder.height / 2));
-	hit_top = valid_cylinder_hit(cylinder, cap_top, axis, ray);
-	hit_bottom = valid_cylinder_hit(cylinder, cap_bottom, vec_mul(axis, -1), ray);
+	cap_top = vec_add(cylinder.center_cy,
+			vec_mul(axis, cylinder.height / 2));
+	cap_bottom = vec_sub(cylinder.center_cy,
+			vec_mul(axis, cylinder.height / 2));
+	hit_top = valid_cap_hit(cylinder, cap_top, axis, ray);
+	hit_bottom = valid_cap_hit(cylinder, cap_bottom, vec_mul(axis, -1), ray);
 	if (hit_top.hit && hit_top.t < hit_bottom.t)
-		closest = hit_top;
+		return (hit_top);
 	else if (hit_bottom.hit && hit_bottom.t < hit_top.t)
-		closest = hit_bottom;
-	return (closest);
+		return (hit_bottom);
+	hit_top.hit = 0;
+	hit_top.t = INF;
+	return (hit_top);
 }
 
 t_hit	closest_cylinder_caps_hit(t_scene *scene, t_ray ray)
@@ -62,10 +75,11 @@ t_hit	closest_cylinder_caps_hit(t_scene *scene, t_ray ray)
 	i = 0;
 	while (i < scene->cylinder_count)
 	{
-		current_hitpoint = intersect_cylinder_caps(scene->cylinder[i], ray);
+		current_hitpoint = intersect_cylinder_caps(scene->cylinder[i],
+				ray);
 		if (current_hitpoint.hit == 1)
 			if (current_hitpoint.t < closest_hitpoint.t)
-					closest_hitpoint = current_hitpoint;
+				closest_hitpoint = current_hitpoint;
 		i++;
 	}
 	return (closest_hitpoint);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jslim <jslim@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 14:30:00 by jslim             #+#    #+#             */
+/*   Updated: 2026/05/19 14:30:00 by jslim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniRT.h"
 
 static void	init_cylinder_quad(t_cylinder cylinder, t_ray ray, t_quad *func)
@@ -76,7 +88,7 @@ t_hit	closest_cylinder_hit(t_scene *scene, t_ray ray)
 		current_hitpoint = intersect_cylinder(scene->cylinder[i], ray);
 		if (current_hitpoint.hit == 1)
 			if (current_hitpoint.t < closest_hitpoint.t)
-					closest_hitpoint = current_hitpoint;
+				closest_hitpoint = current_hitpoint;
 		i++;
 	}
 	return (closest_hitpoint);

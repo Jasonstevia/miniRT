@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plane.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jslim <jslim@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/19 14:30:00 by jslim             #+#    #+#             */
+/*   Updated: 2026/05/19 14:30:00 by jslim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniRT.h"
 
 t_hit	intersect_plane(t_plane plane, t_ray ray)
@@ -10,7 +22,8 @@ t_hit	intersect_plane(t_plane plane, t_ray ray)
 	u = vec_dot(ray.direction, plane.normal);
 	if (fabs(u) < EPSILON)
 		return (hitpoint);
-	hitpoint.t = vec_dot(vec_sub(plane.coordinates_plane, ray.origin), plane.normal) / u;
+	hitpoint.t = vec_dot(vec_sub(plane.coordinates_plane, ray.origin),
+			plane.normal) / u;
 	if (hitpoint.t < EPSILON)
 		return (hitpoint);
 	hitpoint.hit = 1;
