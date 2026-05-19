@@ -15,6 +15,18 @@ void	parsing(miniRT *miniRT)
 	}
 }
 
+void	check_rt(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	i--;
+	if (i < 3 || str[i] != 't' || str[i - 1] != 'r' || str[i - 2] != '.')
+		error_exit("the file is not of type .rt");
+}
+
 int main(int argc, char **argv)
 {
 	miniRT	miniRT;
